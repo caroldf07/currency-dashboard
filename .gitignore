@@ -1,0 +1,30 @@
+# Backend
+backend/.gradle/
+backend/build/
+backend/out/
+*.class
+*.jar
+!backend/gradle/wrapper/gradle-wrapper.jar
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vercel/
+frontend/playwright-report/
+frontend/test-results/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
