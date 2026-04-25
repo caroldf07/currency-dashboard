@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor, act } from '@testing-library/react';
 import { useCurrencyController } from './useCurrencyController';
 import * as currencyApi from '../services/currencyApi';
 
@@ -66,8 +66,11 @@ describe('useCurrencyController', () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
-    result.current.addPair('JPY-BRL');
-    expect(result.current.selectedPairs).toContain('JPY-BRL');
+    await act(async () => {
+      result.current.addPair('JPY-BRL');
+    });
+
+    await waitFor(() => expect(result.current.selectedPairs).toContain('JPY-BRL'));
   });
 
   it('deve remover par da lista', async () => {
@@ -76,7 +79,10 @@ describe('useCurrencyController', () => {
 
     await waitFor(() => expect(result.current.loading).toBe(false));
 
-    result.current.removePair('EUR-USD');
-    expect(result.current.selectedPairs).not.toContain('EUR-USD');
+    await act(async () => {
+      result.current.removePair('EUR-USD');
+    });
+
+    await waitFor(() => expect(result.current.selectedPairs).not.toContain('EUR-USD'));
   });
 });

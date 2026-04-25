@@ -3,13 +3,11 @@ package com.currencydash.infrastructure.adapter.`in`.web
 import com.currencydash.domain.model.AvailableCurrency
 import com.currencydash.domain.model.ExchangeRate
 import com.currencydash.domain.port.`in`.GetExchangeRatesUseCase
+import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.context.annotation.Bean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import java.math.BigDecimal
@@ -21,14 +19,8 @@ class CurrencyControllerTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
-    @Autowired
+    @MockkBean
     private lateinit var useCase: GetExchangeRatesUseCase
-
-    @TestConfiguration
-    class Config {
-        @Bean
-        fun useCase(): GetExchangeRatesUseCase = mockk()
-    }
 
     private val mockRate = ExchangeRate(
         pairCode = "USD-BRL",
