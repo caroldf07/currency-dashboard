@@ -1,0 +1,53 @@
+version: 2.1
+
+jobs:
+  backend-build-test:
+    docker:
+      - image: cimg/openjdk:17.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-backend-{{ checksum "backend/build.gradle.kts" }}
+      - run:
+          name: Grant execute permission
+          command: chmod +x backend/gradlew
+      - run:
+          name: Build and test backend
+          command: cd backend && ./gradlew test --no-daemon
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-backend-{{ checksum "backend/build.gradle.kts" }}
+      - store_test_results:
+          path: backend/build/test-results
+      - store_artifacts:
+          path: backend/build/reports/tests
+
+  frontend-build-test:
+    docker:
+      - image: cimg/node:18.17
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-frontend-{{ checksum "frontend/package-lock.json" }}
+      - run:
+          name: Install dependencies
+          command: cd frontend && npm ci
+      - save_cache:
+          paths:
+            - frontend/node_modules
+          key: v1-frontend-{{ checksum "frontend/package-lock.json" }}
+      - run:
+          name: Run unit tests
+          command: cd frontend && npm test
+      - run:
+          name: Build
+          command: cd frontend && npm run build
+
+workflows:
+  build-test:
+    jobs:
+      - backend-build-test
+      - frontend-build-test
